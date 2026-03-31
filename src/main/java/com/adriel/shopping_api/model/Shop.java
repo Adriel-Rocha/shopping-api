@@ -1,15 +1,17 @@
 package com.adriel.shopping_api.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,8 +34,9 @@ public class Shop {
 
     private BigDecimal total;
 
-    private LocalDateTime date;
+    private Date date;
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
-    private List<ShopItem> items;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "item", joinColumns = @JoinColumn(name = "shop_id"))
+    private List<Item> items;
 }
