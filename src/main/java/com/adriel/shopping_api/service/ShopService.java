@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.adriel.shopping_api.model.Item;
 import com.adriel.shopping_api.model.Shop;
 import com.adriel.shopping_api.dto.ItemDTO;
 import com.adriel.shopping_api.dto.ShopDTO;
+import com.adriel.shopping_api.dto.ShopReportDTO;
 import com.adriel.shopping_api.repository.ShopRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ShopService {
-    
+
+    @Qualifier("shopRepository")
     private final ShopRepository shopRepository;
 
 
@@ -77,6 +80,16 @@ public class ShopService {
 
         return mapToResponse(saved);
         
+    }
+
+    public List<ShopDTO> getShopsByFilter(Date dateInit, Date dateEnd, BigDecimal valorMinimo) {
+        return shopRepository.getShopByFilters(dateInit, dateEnd, valorMinimo)
+                .stream()
+                .map(this::mapToResponse).toList();
+    }
+
+    public ShopReportDTO getReportByDate(Date dateInit, Date dateEnd) {
+        return shopRepository.getReportByDate(dateInit, dateEnd);
     }
 
 
